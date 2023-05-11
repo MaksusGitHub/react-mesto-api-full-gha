@@ -19,7 +19,8 @@ const app = express();
 mongoose.connect(DB);
 
 const corsOptions = {
-  origin: 'https://api.maksus.mesto.nomoredomains.monster',
+  // origin: 'http://localhost:3001',
+  // origin: 'https://api.maksus.mesto.nomoredomains.monster',
 };
 
 app.use(cors(corsOptions));
@@ -58,4 +59,4 @@ app.use((req, res, next) => {
 });
 app.use(errorHandler);
 
-app.listen(PORT, () => {});
+app.listen(PORT, () => { console.log(PORT); });
