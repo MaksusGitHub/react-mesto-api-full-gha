@@ -1,0 +1,14 @@
+.card__trash {
+  all: unset;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  background-image: url(../../../images/trash.svg);
+  width: 18px;
+  height: 19px;
+}
+
+.card__trash:hover {
+  opacity: .6;
+}

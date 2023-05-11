@@ -1,0 +1,25 @@
+.popup__exit-button {
+  all: unset;
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 32px;
+  height: 32px;
+  background: url(../../../images/cross-button.svg) center no-repeat;
+  background-size: 32px;
+  cursor: pointer;
+}
+
+.popup__exit-button:hover {
+  opacity: .6;
+}
+
+@media (max-width: 800px) {
+  .popup__exit-button {
+    width: 20px;
+    height: 20px;
+    right: 0;
+    top: -36px;
+    background-size: 20px;
+  }
+}

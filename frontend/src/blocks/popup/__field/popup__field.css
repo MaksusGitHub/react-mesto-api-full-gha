@@ -1,0 +1,5 @@
+.popup__field {
+  all: unset;
+  position: relative;
+  display: flex;
+}

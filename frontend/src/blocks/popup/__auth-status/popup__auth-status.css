@@ -1,0 +1,15 @@
+.popup__auth-status {
+  margin: 0;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+  color: #000;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .popup__auth-status {
+    font-size: 20px;
+    line-height: 24px;
+  }
+}

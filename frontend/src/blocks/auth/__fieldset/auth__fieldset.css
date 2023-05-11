@@ -1,0 +1,8 @@
+.auth__fieldset {
+  all: unset;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-bottom: 216px;
+}

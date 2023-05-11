@@ -1,0 +1,13 @@
+.popup__fieldset {
+  all: unset;
+  display: flex;
+  margin-bottom: 48px;
+  flex-direction: column;
+  gap: 30px;
+}
+
+@media (max-width: 800px) {
+  .popup__fieldset {
+    margin-bottom: 45px;
+  }
+}

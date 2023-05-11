@@ -1,0 +1,22 @@
+.root__content {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .root__content {
+    max-width: calc(100% - 122px);
+  }
+}
+
+@media (max-width: 800px) {
+  .root__content {
+    max-width: calc(100% - 60px);
+  }
+}
+
+@media (max-width: 600px) {
+  .root__content {
+    max-width: calc(100% - 38px);
+  }
+}
