@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
-const cors = require('cors');
+// const cors = require('cors');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
@@ -18,12 +18,41 @@ const app = express();
 
 mongoose.connect(DB);
 
+const allowedCors = [
+  'https://api.maksus.mesto.nomoredomains.monster',
+  'http://api.maksus.mesto.nomoredomains.monster',
+  'localhost:3000',
+];
+
+app.use((req, res, next) => {
+  const { origin } = req.headers;
+
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+
+  const { method } = req;
+
+  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+  const requestHeaders = req.headers['access-control-request-headers'];
+
+  if (method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+
+    res.header('Access-Control-Allow-Headers', requestHeaders);
+
+    return res.end();
+  }
+
+  return next();
+});
+
 // const corsOptions = {
-//   origin: 'http://localhost:3001',
+//   origin: 'http://localhost:3000',
 //   origin: 'https://api.maksus.mesto.nomoredomains.monster',
 // };
 
-app.use(cors({ origin: 'https://api.maksus.mesto.nomoredomains.monster' }));
+// app.use(cors(corsOptions));
 
 app.use(cookieParser());
 app.use(express.json());
