@@ -18,12 +18,12 @@ const app = express();
 
 mongoose.connect(DB);
 
-const corsOptions = {
-  // origin: 'http://localhost:3001',
-  // origin: 'https://api.maksus.mesto.nomoredomains.monster',
-};
+// const corsOptions = {
+//   origin: 'http://localhost:3001',
+//   origin: 'https://api.maksus.mesto.nomoredomains.monster',
+// };
 
-app.use(cors(corsOptions));
+app.use(cors({ origin: 'https://api.maksus.mesto.nomoredomains.monster' }));
 
 app.use(cookieParser());
 app.use(express.json());
