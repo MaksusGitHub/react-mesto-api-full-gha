@@ -100,7 +100,7 @@ export const api = new Api({
     // authorization: '0844abcf-88c6-4c3b-b660-82dd4df42446'
     authorization: `Bearer ${localStorage.getItem('jwt')}`,
     // 'Origin': 'http://localhost:3000'
-    // 'Origin': 'https://maksus.mesto.nomoredomains.monster'
+    'Origin': 'https://maksus.mesto.nomoredomains.monster'
     // authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDRhYjIxN2FhYjNlZGU0ZjMxMjhmYzYiLCJpYXQiOjE2ODI2NjQ5NDgsImV4cCI6MTY4MzI2OTc0OH0.nI2MNQ_PHQrfF_DzFCx5eKXad1LhE24BZQ7ac1cn4rM'
   }
 }); 
