@@ -3,7 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
-// const cors = require('cors');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
@@ -14,15 +13,14 @@ const { URL_REG } = require('./constants/constants');
 const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000, DB = 'mongodb://localhost:27017/mestodb' } = process.env;
-// const { PORT = 3000, DB = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 const app = express();
 
 mongoose.connect(DB);
 
 const allowedCors = [
-  'https://api.maksus.mesto.nomoredomains.monster',
-  'http://api.maksus.mesto.nomoredomains.monster',
-  'localhost:3000',
+  'https://maksus.mesto.nomoredomains.monster',
+  'http://maksus.mesto.nomoredomains.monster',
+  'http://localhost:3000',
 ];
 
 app.use((req, res, next) => {
@@ -47,13 +45,6 @@ app.use((req, res, next) => {
 
   return next();
 });
-
-// const corsOptions = {
-//   origin: 'http://localhost:3000',
-//   origin: 'https://api.maksus.mesto.nomoredomains.monster',
-// };
-
-// app.use(cors(corsOptions));
 
 app.use(cookieParser());
 app.use(express.json());
@@ -89,4 +80,4 @@ app.use((req, res, next) => {
 });
 app.use(errorHandler);
 
-app.listen(PORT, () => { console.log(PORT); });
+app.listen(PORT, () => {});
