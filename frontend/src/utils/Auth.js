@@ -1,5 +1,3 @@
-// export const BASE_URL = 'http://localhost:3001';
-// export const BASE_URL = 'https://auth.nomoreparties.co';
 export const BASE_URL = 'https://api.maksus.mesto.nomoredomains.monster';
 
 export const register = (password, email) => {
