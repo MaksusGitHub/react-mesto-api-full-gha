@@ -45,7 +45,7 @@ const deleteCardById = (req, res, next) => {
         throw new AccessRightsError();
       }
       Card.findByIdAndRemove(req.params.id)
-        .populate('likes')
+        .populate(['owner', 'likes'])
         .then((deletedCard) => {
           if (!deletedCard) {
             throw new NotFoundError();
