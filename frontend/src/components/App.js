@@ -42,7 +42,7 @@ function App() {
       .catch((err) => {
         console.log(err);
     })
-  }, [])
+  }, [loggedIn])
 
   useEffect(() => {
     api.getInitialCards().then((cards) => {
@@ -51,16 +51,15 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-  }, []);
+  }, [loggedIn]);
 
   const tokenCheck = () => {
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
       getContent(jwt).then((res) => {
         if (res) {
-          setLoggedIn(true);
+          handleLogin(res.email);
           navigate('/', { replace: true });
-          setEmail(res.email);
         }
       });
     }
@@ -152,7 +151,10 @@ function App() {
   return (
     <div className="root">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header email={email} />
+        <Header
+          email={email}
+          setLoggedIn={setLoggedIn}
+        />
         <Routes>
           <Route
             path="/signup"
