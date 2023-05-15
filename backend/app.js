@@ -12,7 +12,7 @@ const { login, createUser } = require('./controllers/users');
 const { URL_REG } = require('./constants/constants');
 const NotFoundError = require('./errors/NotFoundError');
 
-const { PORT = 3000, DB = 'mongodb://localhost:27017/mestodb' } = process.env;
+const { PORT, DB } = process.env;
 const app = express();
 
 mongoose.connect(DB);
