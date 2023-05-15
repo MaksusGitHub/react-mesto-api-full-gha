@@ -7,8 +7,8 @@ const ValidationError = require('../errors/ValidationError');
 
 const getCards = (req, res, next) => {
   Card.find({})
-    .populate(['owner', 'likes'])
-    .then((allCards) => res.send(allCards.reverse()))
+    .populate('likes')
+    .then((allCards) => res.send(allCards))
     .catch(next);
 };
 
@@ -17,18 +17,7 @@ const createCard = (req, res, next) => {
   const owner = req.user._id;
 
   Card.create({ name, link, owner })
-    .then((card) => {
-      card.populate(['owner', 'likes'])
-        .then(() => res.send({
-          likes: card.likes,
-          _id: card._id,
-          name: card.name,
-          link: card.link,
-          owner: card.owner,
-          createdAt: card.createdAt,
-        }))
-        .catch(next);
-    })
+    .then((newCard) => res.send(newCard))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError || mongoose.Error.CastError) {
         next(new ValidationError('Некорректный формат входных данных'));
@@ -45,7 +34,7 @@ const deleteCardById = (req, res, next) => {
         throw new AccessRightsError();
       }
       Card.findByIdAndRemove(req.params.id)
-        .populate(['owner', 'likes'])
+        .populate('likes')
         .then((deletedCard) => {
           if (!deletedCard) {
             throw new NotFoundError();
@@ -71,15 +60,8 @@ const likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   ).orFail(new NotFoundError())
-    .populate(['owner', 'likes'])
-    .then((card) => res.send({
-      _id: card._id,
-      name: card.name,
-      link: card.link,
-      owner: card.owner,
-      likes: card.likes,
-      createdAt: card.createdAt,
-    }))
+    .populate('likes')
+    .then((card) => res.send(card))
     .catch((err) => {
       if (res.headersSent) {
         next(err);
@@ -100,15 +82,8 @@ const dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   ).orFail(new NotFoundError())
-    .populate(['owner', 'likes'])
-    .then((card) => res.send({
-      likes: card.likes,
-      _id: card._id,
-      name: card.name,
-      link: card.link,
-      owner: card.owner,
-      createdAt: card.createdAt,
-    }))
+    .populate('likes')
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err instanceof NotFoundError) {
         next(new NotFoundError('Карточки с таким ID нет'));
