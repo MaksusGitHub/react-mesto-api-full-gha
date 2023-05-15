@@ -71,8 +71,15 @@ const likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   ).orFail(new NotFoundError())
-    .populate('likes')
-    .then((card) => res.send(card))
+    .populate(['owner', 'likes'])
+    .then((card) => res.send({
+      _id: card._id,
+      name: card.name,
+      link: card.link,
+      owner: card.owner,
+      likes: card.likes,
+      createdAt: card.createdAt,
+    }))
     .catch((err) => {
       if (res.headersSent) {
         next(err);
