@@ -7,8 +7,8 @@ const ValidationError = require('../errors/ValidationError');
 
 const getCards = (req, res, next) => {
   Card.find({})
-    .populate('likes')
-    .then((allCards) => res.send(allCards))
+    .populate(['owner', 'likes'])
+    .then((allCards) => res.send(allCards.reverse()))
     .catch(next);
 };
 
