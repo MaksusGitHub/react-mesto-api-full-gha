@@ -8,7 +8,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 158.160.46.255
+IP 158.160.46.255
 
 Frontend https://maksus.mesto.nomoredomains.monster/
 
