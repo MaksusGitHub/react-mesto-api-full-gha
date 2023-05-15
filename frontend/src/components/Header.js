@@ -1,12 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import headerLogo from '../images/header-logo.svg';
 
-function Header({ email, setLoggedIn }) {
+function Header({ email }) {
   const navigate = useNavigate();
   const signOut = () => {
     localStorage.removeItem('jwt');
     navigate('/signin', { replace: true });
-    setLoggedIn(false);
   }
   return (
     <header className="header root__content">

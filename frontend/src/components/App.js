@@ -58,7 +58,6 @@ function App() {
     if (jwt) {
       getContent(jwt).then((res) => {
         if (res) {
-          // handleLogin(res.email);
           setLoggedIn(true);
           navigate('/', { replace: true });
           setEmail(res.email);
@@ -153,10 +152,7 @@ function App() {
   return (
     <div className="root">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header
-          email={email}
-          setLoggedIn={setLoggedIn}
-        />
+        <Header email={email} />
         <Routes>
           <Route
             path="/signup"
