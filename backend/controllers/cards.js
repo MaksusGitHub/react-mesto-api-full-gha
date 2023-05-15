@@ -100,8 +100,15 @@ const dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   ).orFail(new NotFoundError())
-    .populate('likes')
-    .then((card) => res.send(card))
+    .populate(['owner', 'likes'])
+    .then((card) => res.send({
+      likes: card.likes,
+      _id: card._id,
+      name: card.name,
+      link: card.link,
+      owner: card.owner,
+      createdAt: card.createdAt,
+    }))
     .catch((err) => {
       if (err instanceof NotFoundError) {
         next(new NotFoundError('Карточки с таким ID нет'));
