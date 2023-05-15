@@ -17,7 +17,18 @@ const createCard = (req, res, next) => {
   const owner = req.user._id;
 
   Card.create({ name, link, owner })
-    .then((newCard) => res.send(newCard))
+    .then((card) => {
+      card.populate(['owner', 'likes'])
+        .then(() => res.send({
+          likes: card.likes,
+          _id: card._id,
+          name: card.name,
+          link: card.link,
+          owner: card.owner,
+          createdAt: card.createdAt,
+        }))
+        .catch(next);
+    })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError || mongoose.Error.CastError) {
         next(new ValidationError('Некорректный формат входных данных'));
