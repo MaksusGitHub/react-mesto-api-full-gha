@@ -58,8 +58,10 @@ function App() {
     if (jwt) {
       getContent(jwt).then((res) => {
         if (res) {
-          handleLogin(res.email);
+          // handleLogin(res.email);
+          setLoggedIn(true);
           navigate('/', { replace: true });
+          setEmail(res.email);
         }
       });
     }
