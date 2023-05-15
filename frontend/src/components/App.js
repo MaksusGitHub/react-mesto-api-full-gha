@@ -42,7 +42,7 @@ function App() {
       .catch((err) => {
         console.log(err);
     })
-  }, [loggedIn])
+  }, [])
 
   useEffect(() => {
     api.getInitialCards().then((cards) => {
@@ -51,7 +51,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-  }, [loggedIn]);
+  }, []);
 
   const tokenCheck = () => {
     const jwt = localStorage.getItem('jwt');
