@@ -8,21 +8,18 @@ const AuthError = require('../errors/AuthError');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
     minlength: 2,
     maxlength: 30,
     default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
-    required: true,
     minlength: 2,
     maxlength: 30,
     default: 'Исследователь',
   },
   avatar: {
     type: String,
-    required: true,
     validate: {
       validator(v) {
         return URL_REG.test(v);
@@ -53,12 +50,12 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new AuthError();
+        throw new AuthError('Необходима авторизация');
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new AuthError();
+            throw new AuthError('Неправильные почта или пароль');
           }
           return user;
         });
