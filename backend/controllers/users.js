@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
-const AuthError = require('../errors/AuthError');
 const ConflictError = require('../errors/ConflictError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -17,15 +16,9 @@ const getUsers = (req, res, next) => {
 };
 
 const getUserById = (req, res, next) => {
-  User.findById(req.params.id).orFail(new NotFoundError())
+  User.findById(req.params.id).orFail(new NotFoundError('Пользователя с таким ID нет'))
     .then((user) => res.send(user))
-    .catch((err) => {
-      if (err instanceof NotFoundError) {
-        next(new NotFoundError('Пользователя с таким ID нет'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 const createUser = (req, res, next) => {
@@ -65,7 +58,7 @@ const createUser = (req, res, next) => {
 
 const getProfile = (req, res, next) => {
   const owner = req.user._id;
-  User.findById(owner).orFail(new NotFoundError())
+  User.findById(owner).orFail(new NotFoundError('Пользователя с таким ID нет'))
     .then((user) => res.send({
       _id: user._id,
       name: user.name,
@@ -73,15 +66,7 @@ const getProfile = (req, res, next) => {
       avatar: user.avatar,
       email: user.email,
     }))
-    .catch((err) => {
-      if (err instanceof mongoose.Error.NotFoundError) {
-        next(new NotFoundError('Пользователя с таким ID нет'));
-      } else if (err instanceof mongoose.Error.ValidationError || mongoose.Error.CastError) {
-        next(new ValidationError('Некорректный формат входных данных'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 const updateProfile = (req, res, next) => {
@@ -94,7 +79,7 @@ const updateProfile = (req, res, next) => {
       new: true,
       runValidators: true,
     },
-  ).orFail(new NotFoundError())
+  ).orFail(new NotFoundError('Пользователя с таким ID нет'))
     .then((user) => res.send({
       _id: user._id,
       name: user.name,
@@ -103,9 +88,7 @@ const updateProfile = (req, res, next) => {
       email: user.email,
     }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.NotFoundError) {
-        next(new NotFoundError('Пользователя с таким ID нет'));
-      } else if (err instanceof mongoose.Error.ValidationError || mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.ValidationError) {
         next(new ValidationError('Некорректный формат входных данных'));
       } else {
         next(err);
@@ -123,12 +106,10 @@ const updateAvatar = (req, res, next) => {
       new: true,
       runValidators: true,
     },
-  ).orFail(new NotFoundError())
+  ).orFail(new NotFoundError('Пользователя с таким ID нет'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.NotFoundError) {
-        next(new NotFoundError('Пользователя с таким ID нет'));
-      } else if (err instanceof mongoose.Error.ValidationError || mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.ValidationError) {
         next(new ValidationError('Некорректный формат входных данных'));
       } else {
         next(err);
@@ -148,13 +129,7 @@ const login = (req, res, next) => {
       );
       res.send({ token });
     })
-    .catch((err) => {
-      if (err instanceof AuthError) {
-        next(new AuthError('Неправильные почта или пароль'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 module.exports = {

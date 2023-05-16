@@ -30,7 +30,7 @@ const createCard = (req, res, next) => {
         .catch(next);
     })
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError || mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.ValidationError) {
         next(new ValidationError('Некорректный формат входных данных'));
       } else {
         next(err);
@@ -39,25 +39,17 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCardById = (req, res, next) => {
-  Card.findById(req.params.id).orFail(new NotFoundError())
+  Card.findById(req.params.id).orFail(new NotFoundError('Карточки с таким ID нет'))
+    .populate(['owner', 'likes'])
     .then((card) => {
-      if (String(card.owner) !== req.user._id) {
+      if (String(card.owner._id) !== req.user._id) {
         throw new AccessRightsError();
       }
-      Card.findByIdAndRemove(req.params.id)
-        .populate(['owner', 'likes'])
-        .then((deletedCard) => {
-          if (!deletedCard) {
-            throw new NotFoundError();
-          }
-          res.send(deletedCard);
-        })
-        .catch(next);
+      card.deleteOne();
+      res.send(card);
     })
     .catch((err) => {
-      if (err instanceof NotFoundError) {
-        next(new NotFoundError('Карточки с таким ID нет'));
-      } else if (err instanceof AccessRightsError) {
+      if (err instanceof AccessRightsError) {
         next(new AccessRightsError('Нет доступа к этой карточке'));
       } else {
         next(err);
@@ -70,7 +62,7 @@ const likeCard = (req, res, next) => {
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
-  ).orFail(new NotFoundError())
+  ).orFail(new NotFoundError('Карточки с таким ID нет'))
     .populate(['owner', 'likes'])
     .then((card) => res.send({
       _id: card._id,
@@ -80,18 +72,7 @@ const likeCard = (req, res, next) => {
       likes: card.likes,
       createdAt: card.createdAt,
     }))
-    .catch((err) => {
-      if (res.headersSent) {
-        next(err);
-      }
-      if (err instanceof NotFoundError) {
-        next(new NotFoundError('Карточки с таким ID нет'));
-      } else if (err instanceof mongoose.Error.ValidationError || mongoose.Error.CastError) {
-        next(new ValidationError('Некорректный формат входных данных'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 const dislikeCard = (req, res, next) => {
@@ -99,7 +80,7 @@ const dislikeCard = (req, res, next) => {
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true },
-  ).orFail(new NotFoundError())
+  ).orFail(new NotFoundError('Карточки с таким ID нет'))
     .populate(['owner', 'likes'])
     .then((card) => res.send({
       likes: card.likes,
@@ -109,15 +90,7 @@ const dislikeCard = (req, res, next) => {
       owner: card.owner,
       createdAt: card.createdAt,
     }))
-    .catch((err) => {
-      if (err instanceof NotFoundError) {
-        next(new NotFoundError('Карточки с таким ID нет'));
-      } else if (err instanceof mongoose.Error.ValidationError || mongoose.Error.CastError) {
-        next(new ValidationError('Некорректный формат входных данных'));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 module.exports = {
