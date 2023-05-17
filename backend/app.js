@@ -1,9 +1,9 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 
+const { PORT, DB } = require('./config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const router = require('./routes');
@@ -12,7 +12,6 @@ const { login, createUser } = require('./controllers/users');
 const { URL_REG } = require('./constants/constants');
 const NotFoundError = require('./errors/NotFoundError');
 
-const { PORT = 3001, DB = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 const app = express();
 
 mongoose.connect(DB);
