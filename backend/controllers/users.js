@@ -9,6 +9,18 @@ const ConflictError = require('../errors/ConflictError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
+const getUser = (req, res, next, id) => {
+  User.findById(id).orFail(new NotFoundError('Пользователя с таким ID нет'))
+    .then((user) => res.send({
+      _id: user._id,
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email,
+    }))
+    .catch(next);
+};
+
 const getUsers = (req, res, next) => {
   User.find({})
     .then((allUsers) => res.send(allUsers))
@@ -16,9 +28,7 @@ const getUsers = (req, res, next) => {
 };
 
 const getUserById = (req, res, next) => {
-  User.findById(req.params.id).orFail(new NotFoundError('Пользователя с таким ID нет'))
-    .then((user) => res.send(user))
-    .catch(next);
+  getUser(req, res, next, req.params.id);
 };
 
 const createUser = (req, res, next) => {
@@ -57,16 +67,7 @@ const createUser = (req, res, next) => {
 };
 
 const getProfile = (req, res, next) => {
-  const owner = req.user._id;
-  User.findById(owner).orFail(new NotFoundError('Пользователя с таким ID нет'))
-    .then((user) => res.send({
-      _id: user._id,
-      name: user.name,
-      about: user.about,
-      avatar: user.avatar,
-      email: user.email,
-    }))
-    .catch(next);
+  getUser(req, res, next, req.user._id);
 };
 
 const updateProfile = (req, res, next) => {
