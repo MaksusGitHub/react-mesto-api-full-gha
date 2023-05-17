@@ -92,8 +92,7 @@ class Api {
 }
 
 export const api = new Api({
-  url: 'http://localhost:3001',
-  // url: 'https://api.maksus.mesto.nomoredomains.monster',
+  url: 'https://api.maksus.mesto.nomoredomains.monster',
   headers: {
     'Content-Type': 'application/json',
     authorization: `Bearer ${localStorage.getItem('jwt')}`,

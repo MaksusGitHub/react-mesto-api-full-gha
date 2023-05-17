@@ -2,12 +2,11 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const { NODE_ENV, JWT_SECRET } = require('../config');
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConflictError');
-
-const { NODE_ENV, JWT_SECRET } = process.env;
 
 const getUser = (req, res, next, id) => {
   User.findById(id).orFail(new NotFoundError('Пользователя с таким ID нет'))
