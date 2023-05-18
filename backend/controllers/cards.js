@@ -45,8 +45,10 @@ const deleteCardById = (req, res, next) => {
       if (String(card.owner._id) !== req.user._id) {
         throw new AccessRightsError();
       }
-      card.deleteOne();
-      res.send(card);
+      return card.deleteOne();
+    })
+    .then((deletedCard) => {
+      res.send(deletedCard);
     })
     .catch((err) => {
       if (err instanceof AccessRightsError) {

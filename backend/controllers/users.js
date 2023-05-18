@@ -57,7 +57,7 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже существует'));
-      } else if (err instanceof mongoose.Error.ValidationError || mongoose.Error.CastError) {
+      } else if (err instanceof mongoose.Error.ValidationError) {
         next(new ValidationError('Некорректный формат входных данных'));
       } else {
         next(err);
